@@ -1,5 +1,5 @@
-# Use Node.js 18 Alpine as base image for building
-FROM node:18-alpine as build
+# Use Node.js 18 Alpine as base image
+FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
@@ -16,17 +16,11 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Use Nginx Alpine for serving the built application
-FROM nginx:alpine
+# Install a simple static file server
+RUN npm install -g serve
 
-# Copy built assets from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+# Expose port (Render will use the PORT environment variable)
+EXPOSE 3000
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Expose port 80
-EXPOSE 80
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start the application
+CMD ["serve", "-s", "dist", "-l", "3000"]

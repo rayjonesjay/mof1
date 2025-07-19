@@ -42,7 +42,7 @@ npm run build
 docker build -t robcon-website .
 
 # Run the container
-docker run -p 3000:80 robcon-website
+docker run -p 3000:3000 robcon-website
 ```
 
 ### Using Docker Compose
@@ -60,8 +60,8 @@ The website will be available at `http://localhost:3000`
 ## Production Deployment
 
 The Dockerfile uses a multi-stage build process:
-1. **Build stage**: Uses Node.js to install dependencies and build the React application
-2. **Production stage**: Uses Nginx Alpine to serve the static files
+1. Uses Node.js to install dependencies and build the React application
+2. Uses the `serve` package to serve the static files on port 3000
 
 ### Environment Variables
 
@@ -69,12 +69,10 @@ No environment variables are required for basic functionality.
 
 ### Nginx Configuration
 
-The included `nginx.conf` provides:
-- Gzip compression for better performance
-- Security headers
-- Client-side routing support
-- Static asset caching
-- Access and error logging
+The application uses the `serve` package which provides:
+- Static file serving
+- Client-side routing support (SPA mode)
+- Automatic compression
 
 ## Technology Stack
 
